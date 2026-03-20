@@ -446,7 +446,7 @@
         // CONFIGURATION — UPDATE THIS AFTER SETUP
         // ============================================
         // Replace with your Google Apps Script deployment URL:
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxF9B4dXKChGjkkPdD4YyQYaZgjHpYeBJ9G15G2d4DHkJZvlvMp9Hkmqp1npas-IgWAAA/exec';
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyREo1Sa5GLc40cb-cMb40UPnrap4JeMG3OzZ2VyijUYVvYWQPikkxBr4HdWEjduIL0HQ/exec';
         // ============================================
 
         function openModal(product) {
@@ -497,7 +497,7 @@
     };
 
     try {
-        if (GOOGLE_SCRIPT_URL === 'https://script.google.com/macros/s/AKfycbxF9B4dXKChGjkkPdD4YyQYaZgjHpYeBJ9G15G2d4DHkJZvlvMp9Hkmqp1npas-IgWAAA/exec') {
+        if (GOOGLE_SCRIPT_URL === 'https://script.google.com/macros/s/AKfycbyREo1Sa5GLc40cb-cMb40UPnrap4JeMG3OzZ2VyijUYVvYWQPikkxBr4HdWEjduIL0HQ/exec') {
             console.log('Form data (backend not configured):', formData);
             await new Promise(r => setTimeout(r, 800));
         } else {
@@ -509,7 +509,7 @@
 
             var form = document.createElement('form');
             form.method = 'POST';
-            form.action = GOOGLE_SCRIPT_URL;
+            form.action = GOOGLE_SCRIPT_URL + '?' + new URLSearchParams(formData).toString();
             form.target = 'hidden_iframe';
 
             Object.keys(formData).forEach(function(key) {
