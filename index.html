@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tea Party Tools — Legal Software for NZ Defence Lawyers</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;1,9..144,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --ink: #1a1a1a;
+            --paper: #faf8f4;
+            --cream: #f0ece4;
+            --sage: #4a6741;
+            --sage-light: #e8ede6;
+            --sage-dark: #3a5233;
+            --copper: #b87333;
+            --copper-light: #f5ebe0;
+            --muted: #6b6560;
+            --border: #d8d3cb;
+            --white: #ffffff;
+            --radius: 8px;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+            --shadow-lg: 0 8px 30px rgba(0,0,0,0.1);
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--paper);
+            color: var(--ink);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ---- NAV ---- */
+        nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            background: rgba(250, 248, 244, 0.92);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            padding: 0 2rem;
+        }
+        .nav-inner {
+            max-width: 1080px; margin: 0 auto;
+            display: flex; align-items: center; justify-content: space-between;
+            height: 64px;
+        }
+        .nav-brand {
+            font-family: 'Fraunces', serif;
+            font-weight: 700; font-size: 1.25rem;
+            color: var(--sage);
+            text-decoration: none;
+            letter-spacing: -0.02em;
+        }
+        .nav-links { display: flex; gap: 0.25rem; }
+        .nav-links a {
+            text-decoration: none; color: var(--muted);
+            font-size: 0.875rem; font-weight: 500;
+            padding: 0.5rem 0.85rem; border-radius: 6px;
+            transition: color 0.2s, background 0.2s;
+        }
+        .nav-links a:hover { color: var(--ink); background: var(--cream); }
+
+        /* ---- HERO ---- */
+        .hero {
+            padding: 10rem 2rem 4rem;
+            text-align: center;
+            max-width: 720px; margin: 0 auto;
+        }
+        .hero h1 {
+            font-family: 'Fraunces', serif;
+            font-weight: 700; font-size: clamp(2.2rem, 5vw, 3.2rem);
+            line-height: 1.15; letter-spacing: -0.03em;
+            color: var(--ink);
+            margin-bottom: 1.25rem;
+        }
+        .hero h1 em {
+            font-style: italic; font-weight: 300;
+            color: var(--sage);
+        }
+        .hero p {
+            font-size: 1.125rem; color: var(--muted);
+            max-width: 540px; margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        /* ---- PRODUCTS GRID ---- */
+        .products {
+            max-width: 1080px; margin: 0 auto;
+            padding: 2rem 2rem 6rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 2.25rem 2rem 2rem;
+            display: flex; flex-direction: column;
+            transition: box-shadow 0.25s, transform 0.25s;
+            position: relative;
+        }
+        .card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+        }
+
+        .card-badge {
+            display: inline-block;
+            font-size: 0.7rem; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 0.08em;
+            padding: 0.25rem 0.65rem; border-radius: 20px;
+            width: fit-content; margin-bottom: 1.25rem;
+        }
+        .badge-beta { background: var(--sage-light); color: var(--sage-dark); }
+        .badge-live { background: var(--copper-light); color: var(--copper); }
+
+        .card h2 {
+            font-family: 'Fraunces', serif;
+            font-weight: 700; font-size: 1.5rem;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.5rem;
+        }
+        .card-platform {
+            font-size: 0.8rem; color: var(--muted);
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+        .card p {
+            color: var(--muted); font-size: 0.95rem;
+            line-height: 1.65; flex: 1;
+            margin-bottom: 1.5rem;
+        }
+        .card ul {
+            list-style: none; padding: 0; margin: 0 0 1.75rem;
+            flex: 1;
+        }
+        .card ul li {
+            font-size: 0.9rem; color: var(--muted);
+            padding: 0.35rem 0;
+            padding-left: 1.25rem;
+            position: relative;
+        }
+        .card ul li::before {
+            content: ''; position: absolute;
+            left: 0; top: 0.7rem;
+            width: 6px; height: 6px;
+            background: var(--sage); border-radius: 50%;
+        }
+
+        .btn {
+            display: inline-flex; align-items: center; justify-content: center;
+            padding: 0.75rem 1.5rem;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.9rem; font-weight: 600;
+            border: none; border-radius: var(--radius);
+            cursor: pointer; text-decoration: none;
+            transition: all 0.2s;
+        }
+        .btn-primary {
+            background: var(--sage); color: var(--white);
+        }
+        .btn-primary:hover { background: var(--sage-dark); }
+
+        /* ---- MODAL ---- */
+        .modal-overlay {
+            display: none;
+            position: fixed; inset: 0; z-index: 200;
+            background: rgba(0,0,0,0.45);
+            backdrop-filter: blur(4px);
+            align-items: center; justify-content: center;
+            padding: 1.5rem;
+        }
+        .modal-overlay.active { display: flex; }
+
+        .modal {
+            background: var(--white);
+            border-radius: 12px;
+            width: 100%; max-width: 460px;
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            animation: modalIn 0.25s ease-out;
+        }
+        @keyframes modalIn {
+            from { opacity: 0; transform: translateY(12px) scale(0.97); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .modal-header {
+            padding: 1.75rem 2rem 0;
+        }
+        .modal-header h3 {
+            font-family: 'Fraunces', serif;
+            font-weight: 700; font-size: 1.3rem;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.35rem;
+        }
+        .modal-header p {
+            font-size: 0.875rem; color: var(--muted);
+        }
+
+        .modal-body { padding: 1.5rem 2rem 2rem; }
+
+        .form-group { margin-bottom: 1.1rem; }
+        .form-group label {
+            display: block; font-size: 0.8rem; font-weight: 600;
+            color: var(--ink); margin-bottom: 0.35rem;
+            text-transform: uppercase; letter-spacing: 0.04em;
+        }
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%; padding: 0.65rem 0.85rem;
+            border: 1px solid var(--border); border-radius: 6px;
+            font-family: 'DM Sans', sans-serif; font-size: 0.9rem;
+            color: var(--ink); background: var(--paper);
+            transition: border-color 0.2s;
+            outline: none;
+        }
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: var(--sage);
+        }
+        .form-group textarea { resize: vertical; min-height: 70px; }
+
+        .modal-actions {
+            display: flex; gap: 0.75rem;
+            justify-content: flex-end;
+            padding-top: 0.5rem;
+        }
+        .btn-cancel {
+            background: transparent; color: var(--muted);
+            border: 1px solid var(--border);
+        }
+        .btn-cancel:hover { background: var(--cream); color: var(--ink); }
+        .btn-submit { min-width: 140px; }
+        .btn-submit:disabled {
+            opacity: 0.6; cursor: not-allowed;
+        }
+
+        /* Success state */
+        .modal-success {
+            display: none;
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+        .modal-success.active { display: block; }
+        .modal-success .checkmark {
+            width: 56px; height: 56px; margin: 0 auto 1.25rem;
+            background: var(--sage-light); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .modal-success .checkmark svg { width: 28px; height: 28px; color: var(--sage); }
+        .modal-success h3 {
+            font-family: 'Fraunces', serif;
+            font-weight: 700; font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+        .modal-success p { font-size: 0.9rem; color: var(--muted); margin-bottom: 1.5rem; }
+
+        /* Error state */
+        .form-error {
+            display: none;
+            background: #fef2f2; border: 1px solid #fecaca;
+            color: #991b1b; border-radius: 6px;
+            padding: 0.65rem 0.85rem; font-size: 0.85rem;
+            margin-bottom: 1rem;
+        }
+        .form-error.active { display: block; }
+
+        /* ---- FOOTER ---- */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 2.5rem 2rem;
+            text-align: center;
+        }
+        footer p {
+            font-size: 0.8rem; color: var(--muted);
+        }
+        footer a {
+            color: var(--sage); text-decoration: none;
+        }
+        footer a:hover { text-decoration: underline; }
+
+        /* ---- RESPONSIVE ---- */
+        @media (max-width: 640px) {
+            .hero { padding: 8rem 1.5rem 3rem; }
+            .products { padding: 1rem 1.5rem 4rem; }
+            .card { padding: 1.75rem 1.5rem 1.5rem; }
+            .nav-links { display: none; }
+            .modal-body { padding: 1.25rem 1.5rem 1.5rem; }
+            .modal-header { padding: 1.5rem 1.5rem 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAV -->
+    <nav>
+        <div class="nav-inner">
+            <a href="#" class="nav-brand">Tea Party Tools</a>
+            <div class="nav-links">
+                <a href="#tea-party">Disclosure Analysis</a>
+                <a href="#mortimer">Practice Management</a>
+                <a href="#petey">PDLA Invoicing</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero">
+        <h1>Software built <em>for</em> NZ defence lawyers, <em>by</em> a defence lawyer.</h1>
+        <p>Purpose-built tools for criminal defence practice — from disclosure analysis to practice management to PDLA invoicing.</p>
+    </section>
+
+    <!-- PRODUCTS -->
+    <section class="products">
+
+        <!-- Tea Party Tools -->
+        <div class="card" id="tea-party">
+            <span class="card-badge badge-beta">Beta</span>
+            <h2>Tea Party Tools</h2>
+            <div class="card-platform">Desktop app · Windows &amp; Mac</div>
+            <p>Transform police disclosure packages into searchable, queryable case databases. Ask questions about your evidence and get grounded, cited answers — no hallucinations, no guesswork.</p>
+            <ul>
+                <li>Automatic ingestion of NZ Police disclosure formats</li>
+                <li>Full-text and semantic search across all documents</li>
+                <li>AI-powered chat with source citations for every claim</li>
+                <li>Works offline — your case data stays on your machine</li>
+            </ul>
+            <button class="btn btn-primary" onclick="openModal('Tea Party Tools')">Request Beta Access</button>
+        </div>
+
+        <!-- MortimerAI -->
+        <div class="card" id="mortimer">
+            <span class="card-badge badge-beta">Beta</span>
+            <h2>MortimerAI</h2>
+            <div class="card-platform">Web app · Desktop &amp; Mobile</div>
+            <p>A straightforward practice management tool that integrates with the tools you already use. Manage files, track your time, generate invoices, and stay on top of your caseload.</p>
+            <ul>
+                <li>Syncs with Google Drive, Calendar, and Gmail</li>
+                <li>File notes via desktop or mobile voice-to-text</li>
+                <li>Dashboard with upcoming events and task management</li>
+                <li>Invoice generation from recorded time entries</li>
+            </ul>
+            <button class="btn btn-primary" onclick="openModal('MortimerAI')">Request Beta Access</button>
+        </div>
+
+        <!-- Petey PDLA -->
+        <div class="card" id="petey">
+            <span class="card-badge badge-live">Available</span>
+            <h2>Petey PDLA</h2>
+            <div class="card-platform">Mobile app · Android</div>
+            <p>Capture PDLA call data on the go and generate invoices in seconds. Built specifically for the PDLA workflow — no more spreadsheets, no more manual calculations.</p>
+            <ul>
+                <li>Quick capture of PDLA call details</li>
+                <li>Automatic invoice generation</li>
+                <li>Clean, purpose-built mobile interface</li>
+            </ul>
+            <button class="btn btn-primary" onclick="openModal('Petey PDLA')">Request Access</button>
+        </div>
+
+    </section>
+
+    <!-- MODAL -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+
+            <!-- FORM VIEW -->
+            <div id="modalForm">
+                <div class="modal-header">
+                    <h3 id="modalTitle">Request Access</h3>
+                    <p id="modalSubtitle">We'll be in touch within a couple of working days.</p>
+                </div>
+                <div class="modal-body">
+                    <div class="form-error" id="formError">
+                        Something went wrong — please try again, or email directly at
+                        <a href="mailto:YOUREMAIL@example.com">YOUREMAIL@example.com</a>.
+                    </div>
+                    <form id="accessForm" onsubmit="submitForm(event)">
+                        <input type="hidden" id="formProduct" name="product">
+                        <div class="form-group">
+                            <label for="formName">Name *</label>
+                            <input type="text" id="formName" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="formEmail">Email *</label>
+                            <input type="email" id="formEmail" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="formFirm">Firm / Organisation</label>
+                            <input type="text" id="formFirm" name="firm">
+                        </div>
+                        <div class="form-group">
+                            <label for="formRole">Your role</label>
+                            <select id="formRole" name="role">
+                                <option value="">Select…</option>
+                                <option value="Barrister sole">Barrister sole</option>
+                                <option value="Employed solicitor">Employed solicitor</option>
+                                <option value="PDS lawyer">PDS lawyer</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="formNotes">Anything else? <span style="font-weight:400; text-transform:none;">(optional)</span></label>
+                            <textarea id="formNotes" name="notes" placeholder="e.g. how you heard about us, what you're most interested in"></textarea>
+                        </div>
+                        <div class="modal-actions">
+                            <button type="button" class="btn btn-cancel" onclick="closeModal()">Cancel</button>
+                            <button type="submit" class="btn btn-primary btn-submit" id="submitBtn">Send Request</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- SUCCESS VIEW -->
+            <div class="modal-success" id="modalSuccess">
+                <div class="checkmark">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                    </svg>
+                </div>
+                <h3>Request sent</h3>
+                <p>Thanks — we'll be in touch shortly.</p>
+                <button class="btn btn-primary" onclick="closeModal()">Done</button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>&copy; 2026 Tea Party Tools · Built in Christchurch, NZ · <a href="mailto:YOUREMAIL@example.com">Get in touch</a></p>
+    </footer>
+
+    <script>
+        // ============================================
+        // CONFIGURATION — UPDATE THIS AFTER SETUP
+        // ============================================
+        // Replace with your Google Apps Script deployment URL:
+        const GOOGLE_SCRIPT_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
+        // ============================================
+
+        function openModal(product) {
+            document.getElementById('formProduct').value = product;
+            document.getElementById('modalTitle').textContent = 'Request Access — ' + product;
+            document.getElementById('modalOverlay').classList.add('active');
+            document.getElementById('modalForm').style.display = 'block';
+            document.getElementById('modalSuccess').classList.remove('active');
+            document.getElementById('formError').classList.remove('active');
+            document.getElementById('accessForm').reset();
+            document.getElementById('formProduct').value = product;
+            document.body.style.overflow = 'hidden';
+            // Focus name field after animation
+            setTimeout(() => document.getElementById('formName').focus(), 280);
+        }
+
+        function closeModal() {
+            document.getElementById('modalOverlay').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Close on backdrop click
+        document.getElementById('modalOverlay').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        // Close on Escape
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        async function submitForm(e) {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            const errorEl = document.getElementById('formError');
+            errorEl.classList.remove('active');
+            btn.disabled = true;
+            btn.textContent = 'Sending…';
+
+            const formData = {
+                product: document.getElementById('formProduct').value,
+                name: document.getElementById('formName').value,
+                email: document.getElementById('formEmail').value,
+                firm: document.getElementById('formFirm').value,
+                role: document.getElementById('formRole').value,
+                notes: document.getElementById('formNotes').value,
+                submitted: new Date().toISOString(),
+            };
+
+            try {
+                if (GOOGLE_SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
+                    // Demo mode — no backend configured yet
+                    console.log('Form data (backend not configured):', formData);
+                    await new Promise(r => setTimeout(r, 800));
+                } else {
+                    await fetch(GOOGLE_SCRIPT_URL, {
+                        method: 'POST',
+                        mode: 'no-cors',  // Required for Apps Script
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(formData),
+                    });
+                }
+
+                // Show success
+                document.getElementById('modalForm').style.display = 'none';
+                document.getElementById('modalSuccess').classList.add('active');
+
+            } catch (err) {
+                console.error('Submit error:', err);
+                errorEl.classList.add('active');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Send Request';
+            }
+        }
+    </script>
+
+</body>
+</html>
