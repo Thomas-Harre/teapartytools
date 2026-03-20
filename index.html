@@ -497,37 +497,33 @@
     };
 
     try {
-        if (GOOGLE_SCRIPT_URL === 'https://script.google.com/macros/s/AKfycbyREo1Sa5GLc40cb-cMb40UPnrap4JeMG3OzZ2VyijUYVvYWQPikkxBr4HdWEjduIL0HQ/exec') {
-            console.log('Form data (backend not configured):', formData);
-            await new Promise(r => setTimeout(r, 800));
-        } else {
-            // Create a hidden iframe + form for reliable Apps Script submission
-            var iframe = document.createElement('iframe');
-            iframe.name = 'hidden_iframe';
-            iframe.style.display = 'none';
-            document.body.appendChild(iframe);
+        // Create a hidden iframe + form for reliable Apps Script submission
+        var iframe = document.createElement('iframe');
+        iframe.name = 'hidden_iframe';
+        iframe.style.display = 'none';
+        document.body.appendChild(iframe);
 
-            var form = document.createElement('form');
-            form.method = 'POST';
-            form.action = GOOGLE_SCRIPT_URL + '?' + new URLSearchParams(formData).toString();
-            form.target = 'hidden_iframe';
+        var form = document.createElement('form');
+        form.method = 'POST';
+        // Put fields in the querystring and form body, so Apps Script can read them via e.parameter reliably.
+        form.action = GOOGLE_SCRIPT_URL + '?' + new URLSearchParams(formData).toString();
+        form.target = 'hidden_iframe';
 
-            Object.keys(formData).forEach(function(key) {
-                var input = document.createElement('input');
-                input.type = 'hidden';
-                input.name = key;
-                input.value = formData[key];
-                form.appendChild(input);
-            });
+        Object.keys(formData).forEach(function(key) {
+            var input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = key;
+            input.value = formData[key];
+            form.appendChild(input);
+        });
 
-            document.body.appendChild(form);
-            form.submit();
+        document.body.appendChild(form);
+        form.submit();
 
-            // Clean up after submission
-            await new Promise(r => setTimeout(r, 1500));
-            form.remove();
-            iframe.remove();
-        }
+        // Clean up after submission
+        await new Promise(r => setTimeout(r, 1500));
+        form.remove();
+        iframe.remove();
 
         document.getElementById('modalForm').style.display = 'none';
         document.getElementById('modalSuccess').classList.add('active');
