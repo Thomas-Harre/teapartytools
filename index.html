@@ -479,48 +479,67 @@
         });
 
         async function submitForm(e) {
-            e.preventDefault();
-            const btn = document.getElementById('submitBtn');
-            const errorEl = document.getElementById('formError');
-            errorEl.classList.remove('active');
-            btn.disabled = true;
-            btn.textContent = 'Sending…';
+    e.preventDefault();
+    const btn = document.getElementById('submitBtn');
+    const errorEl = document.getElementById('formError');
+    errorEl.classList.remove('active');
+    btn.disabled = true;
+    btn.textContent = 'Sending…';
 
-            const formData = {
-                product: document.getElementById('formProduct').value,
-                name: document.getElementById('formName').value,
-                email: document.getElementById('formEmail').value,
-                firm: document.getElementById('formFirm').value,
-                role: document.getElementById('formRole').value,
-                notes: document.getElementById('formNotes').value,
-                submitted: new Date().toISOString(),
-            };
+    const formData = {
+        product: document.getElementById('formProduct').value,
+        name: document.getElementById('formName').value,
+        email: document.getElementById('formEmail').value,
+        firm: document.getElementById('formFirm').value,
+        role: document.getElementById('formRole').value,
+        notes: document.getElementById('formNotes').value,
+        submitted: new Date().toISOString(),
+    };
 
-            try {
-                if (GOOGLE_SCRIPT_URL === 'https://script.google.com/macros/s/AKfycbwjaRRItzx6d0wgnkA-jxa1IOU_-LljmB_27hOJkSffQGWrjtkR7kjHBjeOBdcTNg1k/exec') {
-                    // Demo mode — no backend configured yet
-                    console.log('Form data (backend not configured):', formData);
-                    await new Promise(r => setTimeout(r, 800));
-                } else {
-var params = new URLSearchParams(formData).toString();
-await fetch(GOOGLE_SCRIPT_URL + '?' + params, {
-    method: 'GET',
-    mode: 'no-cors',
-});
-                }
+    try {
+        if (GOOGLE_SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
+            console.log('Form data (backend not configured):', formData);
+            await new Promise(r => setTimeout(r, 800));
+        } else {
+            // Create a hidden iframe + form for reliable Apps Script submission
+            var iframe = document.createElement('iframe');
+            iframe.name = 'hidden_iframe';
+            iframe.style.display = 'none';
+            document.body.appendChild(iframe);
 
-                // Show success
-                document.getElementById('modalForm').style.display = 'none';
-                document.getElementById('modalSuccess').classList.add('active');
+            var form = document.createElement('form');
+            form.method = 'POST';
+            form.action = GOOGLE_SCRIPT_URL;
+            form.target = 'hidden_iframe';
 
-            } catch (err) {
-                console.error('Submit error:', err);
-                errorEl.classList.add('active');
-            } finally {
-                btn.disabled = false;
-                btn.textContent = 'Send Request';
-            }
+            Object.keys(formData).forEach(function(key) {
+                var input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = key;
+                input.value = formData[key];
+                form.appendChild(input);
+            });
+
+            document.body.appendChild(form);
+            form.submit();
+
+            // Clean up after submission
+            await new Promise(r => setTimeout(r, 1500));
+            form.remove();
+            iframe.remove();
         }
+
+        document.getElementById('modalForm').style.display = 'none';
+        document.getElementById('modalSuccess').classList.add('active');
+
+    } catch (err) {
+        console.error('Submit error:', err);
+        errorEl.classList.add('active');
+    } finally {
+        btn.disabled = false;
+        btn.textContent = 'Send Request';
+    }
+}
     </script>
 
 </body>
