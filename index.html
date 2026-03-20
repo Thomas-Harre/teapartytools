@@ -497,17 +497,16 @@
             };
 
             try {
-                if (GOOGLE_SCRIPT_URL === 'https://script.google.com/macros/s/AKfycbxh23nXZ7RPgQjRMjLPuER0PTfZjF3u0MQrwW9UD_27-z65RB-G0g2BwEND_QcuzhOTlg/exec') {
+                if (GOOGLE_SCRIPT_URL === 'https://script.google.com/macros/s/AKfycbwjaRRItzx6d0wgnkA-jxa1IOU_-LljmB_27hOJkSffQGWrjtkR7kjHBjeOBdcTNg1k/exec') {
                     // Demo mode — no backend configured yet
                     console.log('Form data (backend not configured):', formData);
                     await new Promise(r => setTimeout(r, 800));
                 } else {
-                    await fetch(GOOGLE_SCRIPT_URL, {
-                        method: 'POST',
-                        mode: 'no-cors',  // Required for Apps Script
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(formData),
-                    });
+var params = new URLSearchParams(formData).toString();
+await fetch(GOOGLE_SCRIPT_URL + '?' + params, {
+    method: 'GET',
+    mode: 'no-cors',
+});
                 }
 
                 // Show success
