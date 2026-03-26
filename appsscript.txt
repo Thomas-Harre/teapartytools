@@ -1,0 +1,116 @@
+function doPost(e) {
+  return handleRequest_(e);
+}
+
+function doGet(e) {
+  return handleRequest_(e);
+}
+
+function parseUrlEncoded_(s) {
+  // Handles application/x-www-form-urlencoded style payloads: a=b&c=d (with '+' meaning space)
+  var out = {};
+  if (!s) return out;
+  s = s.replace(/\+/g, ' ');
+  s.split('&').forEach(function (part) {
+    if (!part) return;
+    var idx = part.indexOf('=');
+    var key = idx >= 0 ? part.slice(0, idx) : part;
+    var val = idx >= 0 ? part.slice(idx + 1) : '';
+    try {
+      key = decodeURIComponent(key);
+    } catch (err) {}
+    try {
+      val = decodeURIComponent(val);
+    } catch (err2) {}
+    out[key] = val;
+  });
+  return out;
+}
+
+function handleRequest_(e) {
+  try {
+    var params = (e && e.parameter) ? e.parameter : {};
+    var data = {};
+
+    // Start with query/form params
+    for (var k in params) data[k] = params[k];
+
+    // Also parse JSON or urlencoded bodies if present
+    if (e && e.postData && e.postData.contents) {
+      var contents = e.postData.contents;
+      var type = (e.postData.type || '').toLowerCase();
+
+      // JSON body?
+      if (type.indexOf('application/json') !== -1 || (contents[0] === '{' || contents[0] === '[')) {
+        try {
+          var json = JSON.parse(contents);
+          if (json && typeof json === 'object') {
+            for (var j in json) data[j] = json[j];
+          }
+        } catch (err) {
+          // If JSON parse fails, fall through to urlencoded parse
+        }
+      } else {
+        // Assume urlencoded body
+        var bodyObj = parseUrlEncoded_(contents);
+        for (var b in bodyObj) data[b] = bodyObj[b];
+      }
+    }
+
+    var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+    sheet.appendRow([
+      data.submitted || new Date().toISOString(),
+      data.product || '',
+      data.name || '',
+      data.email || '',
+      data.firm || '',
+      data.role || '',
+      data.notes || ''
+    ]);
+
+    // Optional: email notification for each request.
+    // Replace ADMIN_EMAIL with the address you want to receive notifications.
+    try {
+      var ADMIN_EMAIL = 'thomas@thomasharre.com'; // TODO: replace with the address you want
+      if (ADMIN_EMAIL) {
+        MailApp.sendEmail({
+          to: ADMIN_EMAIL,
+          subject: 'New access request: ' + (data.product || 'Unknown'),
+          body:
+            'Name: ' + (data.name || '') + '\n' +
+            'Email: ' + (data.email || '') + '\n' +
+            'Firm: ' + (data.firm || '') + '\n' +
+            'Role: ' + (data.role || '') + '\n' +
+            'Product: ' + (data.product || '') + '\n' +
+            'Notes: ' + (data.notes || '') + '\n' +
+            'Submitted: ' + (data.submitted || '')
+        });
+        Logger.log('Email notification sent to: ' + ADMIN_EMAIL);
+      }
+    } catch (mailErr) {
+      // Don't fail the request if email sending fails.
+      Logger.log('Email notification failed: ' + mailErr);
+    }
+
+    return ContentService
+      .createTextOutput(JSON.stringify({
+        result: 'ok',
+        receivedKeys: Object.keys(data),
+        received: {
+          submitted: data.submitted || null,
+          product: data.product || null,
+          name: data.name || null,
+          email: data.email || null,
+          firm: data.firm || null,
+          role: data.role || null,
+          notesPresent: !!data.notes
+        }
+      }))
+      .setMimeType(ContentService.MimeType.JSON);
+
+  } catch (error) {
+    return ContentService
+      .createTextOutput(JSON.stringify({ result: 'error', error: error.toString() }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
